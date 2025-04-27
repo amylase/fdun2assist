@@ -1,4 +1,4 @@
-import { Button, Container, Dropdown, DropdownButton } from "react-bootstrap";
+import { Button, ButtonGroup, Col, Container, Dropdown, DropdownButton, Row } from "react-bootstrap";
 import { staffs } from "../model/item";
 import { useStorage } from "../hooks/useStorage";
 
@@ -51,11 +51,22 @@ function StaffCounterEntry(props: StaffCounterEntryProps) {
 
     return (
         <Container>
-            <span>{`${staffName} ${serializeStaffCount(countLowerBound, countUpperBound)}`}</span>
-            <Button onClick={handleUse}>{"使"}</Button>
-            <Button onClick={handleZero}>{"0"}</Button>
-            <Button onClick={handleAdd}>{"増"}</Button>
-            <Button onClick={removeStaff}>{"消"}</Button>
+            <Row>
+                <Col sm={2}>
+                    {staffName}
+                </Col>
+                <Col sm={1}>
+                    {serializeStaffCount(countLowerBound, countUpperBound)}
+                </Col>
+                <Col sm>
+                    <ButtonGroup size="sm">
+                        <Button variant="primary" onClick={handleUse}>{"使用"}</Button>
+                        <Button variant="secondary" onClick={handleZero}>{"0確定"}</Button>
+                        <Button variant="success" onClick={handleAdd}>{"増加"}</Button>
+                        <Button variant="danger" onClick={removeStaff}>{"削除"}</Button>
+                    </ButtonGroup>
+                </Col>
+            </Row>
         </Container>
     )
 }
@@ -73,31 +84,35 @@ function StaffCounter() {
     }
     return (
         <Container>
-            <h1>杖カウンター</h1>
-            <DropdownButton id="dropdown-basic-button" title="杖を選択">
-                {staffs.map((staff) => {
-                    return (
-                        <Dropdown.Item key={staff.name} onClick={() => addStaff(staff)}>
-                            {staff.name}
-                        </Dropdown.Item>
-                    )
-                })}
-            </DropdownButton>
             {staffStates.map((state, index) => (
-                <StaffCounterEntry
-                    key={index}
-                    state={state}
-                    updateState={(newState) => {
-                        const newStaffStates = [...staffStates]
-                        newStaffStates[index] = newState
-                        setStaffStates(newStaffStates)
-                    }}
-                    removeStaff={() => {
-                        const newStaffStates = staffStates.filter((_, i) => i !== index)
-                        setStaffStates(newStaffStates)
-                    }}
-                />
+                <Container key={index} className="mb-2">
+                    <StaffCounterEntry
+                        key={index}
+                        state={state}
+                        updateState={(newState) => {
+                            const newStaffStates = [...staffStates]
+                            newStaffStates[index] = newState
+                            setStaffStates(newStaffStates)
+                        }}
+                        removeStaff={() => {
+                            const newStaffStates = staffStates.filter((_, i) => i !== index)
+                            setStaffStates(newStaffStates)
+                        }}
+                    />
+                </Container>
             ))}
+            <ButtonGroup>
+                <DropdownButton as={Button} title="杖を選択">
+                    {staffs.map((staff) => {
+                        return (
+                            <Dropdown.Item key={staff.name} onClick={() => addStaff(staff)}>
+                                {staff.name}
+                            </Dropdown.Item>
+                        )
+                    })}
+                </DropdownButton>
+                <Button variant="outline-secondary" onClick={() => setStaffStates([])}>リセット</Button>
+            </ButtonGroup>
         </Container>
     )
 }

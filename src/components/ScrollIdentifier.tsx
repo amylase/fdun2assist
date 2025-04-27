@@ -3,6 +3,7 @@ import { items } from '../model/item'
 import Button from 'react-bootstrap/esm/Button'
 import { useIdentificationStatus, Status as IdentificationStatus } from '../contexts/IdentificationStatus'
 import { useStorage } from '../hooks/useStorage'
+import { ButtonGroup, Col, Form, InputGroup, ProgressBar, Row } from 'react-bootstrap'
 
 const selectableItems = items.filter(item => item.category === '巻物' && item.isSelectable)
 type SelectableItemName = typeof selectableItems[number]['name']
@@ -84,14 +85,39 @@ function UnidentifiedScroll(props: {
     setCount: (count: number) => void,
     deleteEntry: () => void,
 }) {
+    const scrollVariants = {
+        '識別の巻物': 'success',
+        '杖の巻物': 'primary',
+        '消滅の巻物': 'secondary',
+        '武器合成の巻物': 'danger',
+        '防具合成の巻物': 'warning',
+        '分裂の巻物': 'dark',
+    }
     return (
         <Container>
-            
-            <input type='number' value={props.count} onChange={(e) => props.setCount(Number(e.target.value))} />
-            {Object.entries(props.probabilities).map(([key, value]) => (
-                <div key={key}>{key}: {value}</div>
-            ))}
-            <Button variant="danger" onClick={props.deleteEntry}>Delete</Button>
+            <Row>
+                <Col sm={3}>
+                    <InputGroup>
+                        <Form.Control type='number' value={props.count} onChange={(e) => props.setCount(Number(e.target.value))} />
+                        <Button variant="danger" size='sm' onClick={props.deleteEntry}>削除</Button>                            
+                    </InputGroup>
+                </Col>
+                <Col>
+                    <ProgressBar className='mt-2'>  {/** todo: stop using mt-2 for vertical alignment */}
+                        {Object.entries(props.probabilities)
+                            .sort((a, b) => b[1] - a[1])
+                            .map(([key, value]) => (
+                                <ProgressBar 
+                                    key={key} 
+                                    variant={scrollVariants[key]}
+                                    now={value * 100} 
+                                    label={`${key}: ${Math.round(value * 100)}%`} 
+                                />
+                            ))}    
+                    </ProgressBar>
+                </Col>
+                
+            </Row>
         </Container>
     )
 } 
@@ -116,20 +142,23 @@ function ScrollIdentifier() {
     
     return (
         <Container>
-            <h1>指定巻物事後確率</h1>
-            <Button onClick={handleReset}>リセット</Button>
-            <Button onClick={() => {if (itemCounts.length < 6) setItemCounts([...itemCounts, 0])}}>追加</Button>
             <Container>
                 {itemCounts.map((count, index) => (
-                    <UnidentifiedScroll
-                        key={index}
-                        count={count}
-                        probabilities={probabilities ? probabilities[index] : {}}
-                        setCount={(count) => updateEntry(index, count)}
-                        deleteEntry={() => deleteEntry(index)}
-                    />
+                    <Container key={index} className="mb-2">
+                        <UnidentifiedScroll
+                            key={index}
+                            count={count}
+                            probabilities={probabilities ? probabilities[index] : {}}
+                            setCount={(count) => updateEntry(index, count)}
+                            deleteEntry={() => deleteEntry(index)}
+                        />
+                    </Container>
                 ))}
             </Container>
+            <ButtonGroup className='mb-2'>
+                <Button onClick={() => {if (itemCounts.length < 6) setItemCounts([...itemCounts, 0])}}>追加</Button>
+                <Button variant='outline-secondary' onClick={handleReset}>リセット</Button>                
+            </ButtonGroup>
         </Container>
     );
 }

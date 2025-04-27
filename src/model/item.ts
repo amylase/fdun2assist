@@ -311,7 +311,7 @@ const _bracelets = [
         "probability": 0.00308633
     },
     {
-        "name": "次元爆弾の腕輪",
+        "name": "時限爆弾の腕輪",
         "probability": 0.00102884
     },
     {
@@ -767,4 +767,4 @@ const stones: StoneData[] = _stones.map((stone) => ({
 }));
 
 export type Item = typeof items[number];
-export const items = [...weapons, ...armors, ...bracelets, ...firearms, ...foods, ...grasses, ...scrolls, ...staffs, ...stones] as const satisfies readonly ItemData[];
+export const items = [...weapons, ...armors, ...bracelets, ...firearms, ...foods, ...grasses, ...medicines, ...scrolls, ...staffs, ...stones] as const satisfies readonly ItemData[];
