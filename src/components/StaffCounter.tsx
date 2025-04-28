@@ -1,9 +1,16 @@
-import { Button, ButtonGroup, Col, Container, Dropdown, DropdownButton, Row } from "react-bootstrap";
+import { Button, ButtonGroup, Col, Container, Dropdown, DropdownButton, InputGroup, Row } from "react-bootstrap";
 import { staffs } from "../model/item";
 import { useStorage } from "../hooks/useStorage";
 
 
-type Staff = typeof staffs[number]
+const staffsOrUnidentified = [
+    ...staffs,
+    {
+        name: "未識別",
+        probability: 0,
+    }
+]
+type Staff = typeof staffsOrUnidentified[number]
 
 type StaffState = {
     staff: Staff,
@@ -30,6 +37,11 @@ function StaffCounterEntry(props: StaffCounterEntryProps) {
     const { staff, countLowerBound, countUpperBound } = state
     const staffName = staff.name
 
+    function handleIdentify(staff: Staff) {    
+        const newState = { ...state, staff }
+        updateState(newState)
+    }
+
     function handleUse() {
         const newState = { ...state, 
             countLowerBound: Math.max(countLowerBound - 1, 0), 
@@ -50,16 +62,26 @@ function StaffCounterEntry(props: StaffCounterEntryProps) {
     }   
 
     return (
-        <Container>
+        <>
             <Row>
-                <Col sm={2}>
-                    {staffName}
+                <Col sm={3}>
+                    <InputGroup>
+                        <DropdownButton variant="outline-secondary" title={staffName}>
+                            {staffsOrUnidentified.map((staff) => {
+                                return (
+                                    <Dropdown.Item key={staff.name} onClick={() => handleIdentify(staff)}>
+                                        {staff.name}
+                                    </Dropdown.Item>
+                                )
+                            })}
+                        </DropdownButton>
+                        <InputGroup.Text>
+                            {serializeStaffCount(countLowerBound, countUpperBound)}                    
+                        </InputGroup.Text>
+                    </InputGroup>
                 </Col>
-                <Col sm={1}>
-                    {serializeStaffCount(countLowerBound, countUpperBound)}
-                </Col>
-                <Col sm>
-                    <ButtonGroup size="sm">
+                <Col>
+                    <ButtonGroup>
                         <Button variant="primary" onClick={handleUse}>{"使用"}</Button>
                         <Button variant="secondary" onClick={handleZero}>{"0確定"}</Button>
                         <Button variant="success" onClick={handleAdd}>{"増加"}</Button>
@@ -67,7 +89,7 @@ function StaffCounterEntry(props: StaffCounterEntryProps) {
                     </ButtonGroup>
                 </Col>
             </Row>
-        </Container>
+        </>
     )
 }
 
@@ -83,9 +105,9 @@ function StaffCounter() {
         setStaffStates([...staffStates, newState])
     }
     return (
-        <Container>
+        <>
             {staffStates.map((state, index) => (
-                <Container key={index} className="mb-2">
+                <div key={index} className="mb-2">
                     <StaffCounterEntry
                         key={index}
                         state={state}
@@ -99,11 +121,11 @@ function StaffCounter() {
                             setStaffStates(newStaffStates)
                         }}
                     />
-                </Container>
+                </div>
             ))}
             <ButtonGroup>
-                <DropdownButton as={Button} title="杖を選択">
-                    {staffs.map((staff) => {
+                <DropdownButton title="杖を選択">
+                    {staffsOrUnidentified.map((staff) => {
                         return (
                             <Dropdown.Item key={staff.name} onClick={() => addStaff(staff)}>
                                 {staff.name}
@@ -111,9 +133,11 @@ function StaffCounter() {
                         )
                     })}
                 </DropdownButton>
+            </ButtonGroup>
+            <ButtonGroup className="ms-2">
                 <Button variant="outline-secondary" onClick={() => setStaffStates([])}>リセット</Button>
             </ButtonGroup>
-        </Container>
+        </>
     )
 }
 

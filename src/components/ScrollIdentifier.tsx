@@ -94,7 +94,7 @@ function UnidentifiedScroll(props: {
         '分裂の巻物': 'dark',
     }
     return (
-        <Container>
+        <>
             <Row>
                 <Col sm={3}>
                     <InputGroup>
@@ -116,9 +116,8 @@ function UnidentifiedScroll(props: {
                             ))}    
                     </ProgressBar>
                 </Col>
-                
             </Row>
-        </Container>
+        </>
     )
 } 
 
@@ -141,10 +140,10 @@ function ScrollIdentifier() {
     const probabilities = calculateProbability(itemCounts, identificationStatus);
     
     return (
-        <Container>
-            <Container>
+        <>
+            <>
                 {itemCounts.map((count, index) => (
-                    <Container key={index} className="mb-2">
+                    <div className='mb-2' key={index}>
                         <UnidentifiedScroll
                             key={index}
                             count={count}
@@ -152,14 +151,17 @@ function ScrollIdentifier() {
                             setCount={(count) => updateEntry(index, count)}
                             deleteEntry={() => deleteEntry(index)}
                         />
-                    </Container>
+                    </div>
+                    
                 ))}
-            </Container>
-            <ButtonGroup className='mb-2'>
+            </>
+            <ButtonGroup>
                 <Button onClick={() => {if (itemCounts.length < 6) setItemCounts([...itemCounts, 0])}}>追加</Button>
+            </ButtonGroup>
+            <ButtonGroup className='ms-2'>
                 <Button variant='outline-secondary' onClick={handleReset}>リセット</Button>                
             </ButtonGroup>
-        </Container>
+        </>
     );
 }
 

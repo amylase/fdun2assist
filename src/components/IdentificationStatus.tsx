@@ -82,7 +82,7 @@ function IdentificationStatus() {
     }
 
     return (
-        <Container>
+        <>
             <CategoryItems category="腕輪" />
             <CategoryItems category="草" />
             <CategoryItems category="薬" />
@@ -91,9 +91,11 @@ function IdentificationStatus() {
             <ButtonGroup>
                 <Button variant='danger' onClick={handleWasurena}>忘れな草</Button>
                 <Button variant='warning' onClick={handleBokunenjin}>墨念人の魔法</Button>
+            </ButtonGroup>
+            <ButtonGroup className='ms-2'>
                 <Button variant='outline-secondary' onClick={() => setIdentificationStatus(gameStartState)}>リセット</Button>
             </ButtonGroup>
-        </Container>
+        </>
     );
 }
 
