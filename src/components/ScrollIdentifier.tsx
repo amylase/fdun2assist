@@ -1,4 +1,3 @@
-import Container from 'react-bootstrap/Container'
 import { items } from '../model/item'
 import Button from 'react-bootstrap/esm/Button'
 import { useIdentificationStatus, Status as IdentificationStatus } from '../contexts/IdentificationStatus'
@@ -17,10 +16,10 @@ function permutations<T>(items: T[]): T[][] {
     const perms = []
     if (items.length === 0) return [[]]
 
-    for (let item of items) {
+    for (const item of items) {
         const newItems = items.filter(i => i !== item)
         const subPerms = permutations(newItems)
-        for (let subPerm of subPerms) {
+        for (const subPerm of subPerms) {
             perms.push([item, ...subPerm])
         }
     }
@@ -50,7 +49,7 @@ function calculateProbability(observations: number[], identificationStatus: Iden
     const total_weight = Object.values(weights).reduce((a, b) => a + b, 0)
 
     const assign_weights = []
-    for (let assignments of permutations(unidentified)) {
+    for (const assignments of permutations(unidentified)) {
         let assign_weight = 1.
         for (let i = 0; i < assignments.length; i++) {
             const item_name = assignments[i]
@@ -63,7 +62,7 @@ function calculateProbability(observations: number[], identificationStatus: Iden
     }
 
     const total_assign_weight = assign_weights.reduce((a, b) => a + b.weight, 0)
-    for (let assign_weight of assign_weights) {
+    for (const assign_weight of assign_weights) {
         assign_weight.weight /= total_assign_weight
     }
 
@@ -109,6 +108,7 @@ function UnidentifiedScroll(props: {
                             .map(([key, value]) => (
                                 <ProgressBar 
                                     key={key} 
+                                    // @ts-expect-error scrollVariants is not typed well
                                     variant={scrollVariants[key]}
                                     now={value * 100} 
                                     label={`${key}: ${Math.round(value * 100)}%`} 

@@ -1,4 +1,3 @@
-import Container from 'react-bootstrap/Container'
 import { Category } from '../model/item'
 import Button from 'react-bootstrap/esm/Button'
 import { IdentifiableItemName, identifiableItems, IdentificationState, gameStartState, useIdentificationStatus } from '../contexts/IdentificationStatus';
