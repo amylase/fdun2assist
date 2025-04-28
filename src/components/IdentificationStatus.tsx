@@ -1,6 +1,5 @@
-import { Category } from '../model/item'
 import Button from 'react-bootstrap/esm/Button'
-import { IdentifiableItemName, identifiableItems, IdentificationState, gameStartState, useIdentificationStatus } from '../contexts/IdentificationStatus';
+import { IdentifiableItemName, identifiableItems, IdentificationState, gameStartState, useIdentificationStatus, IdentifiableItem } from '../contexts/IdentificationStatus';
 import { ButtonGroup } from 'react-bootstrap';
 
 
@@ -61,11 +60,10 @@ function IdentificationStatus() {
         '忘却': 'danger',
         '忘れたかも': 'warning'
     }
-    function CategoryItems({ category }: { category: Category }) {
+    function CategoryItems({ items }: { items: IdentifiableItem[] }) {
         return (
             <ButtonGroup size='sm' className='mb-2'>
-                {identifiableItems
-                    .filter(item => item.category === category)
+                {items
                     .map(item => (
                         <Button 
                             key={item.name} 
@@ -80,13 +78,18 @@ function IdentificationStatus() {
         );
     }
 
+    function itemComparator(a: IdentifiableItem, b: IdentifiableItem) {
+        return b.probability - a.probability;
+    }
+
     return (
         <>
-            <CategoryItems category="腕輪" />
-            <CategoryItems category="草" />
-            <CategoryItems category="薬" />
-            <CategoryItems category="巻物" />
-            <CategoryItems category="杖" />
+            <CategoryItems items={identifiableItems.filter(item => item.category === "腕輪").sort(itemComparator)}/>
+            <CategoryItems items={identifiableItems.filter(item => item.category === "草").sort(itemComparator)}/>
+            <CategoryItems items={identifiableItems.filter(item => item.category === "薬").sort(itemComparator)}/>
+            <CategoryItems items={identifiableItems.filter(item => item.category === "巻物" && item.isSelectable).sort(itemComparator)}/>
+            <CategoryItems items={identifiableItems.filter(item => item.category === "巻物" && !item.isSelectable).sort(itemComparator)}/>
+            <CategoryItems items={identifiableItems.filter(item => item.category === "杖").sort(itemComparator)}/>
             <ButtonGroup>
                 <Button variant='danger' onClick={handleWasurena}>忘れな草</Button>
                 <Button variant='warning' onClick={handleBokunenjin}>墨念人の魔法</Button>

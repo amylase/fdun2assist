@@ -3,6 +3,7 @@ import { items } from "../model/item";
 import { useStorage } from '../hooks/useStorage';
 
 export const identifiableItems = items.filter(item => item.isIdentifiable)
+export type IdentifiableItem = typeof identifiableItems[number]
 export type IdentifiableItemName = typeof identifiableItems[number]['name']
 export type IdentificationState = '識別済' | '未識別' | '忘却' | '忘れたかも'
 

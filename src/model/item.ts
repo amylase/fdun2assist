@@ -544,7 +544,7 @@ const _scrolls = [
         "isSelectable": false
     },
     {
-        "name": "アイテム発見の巻物",
+        "name": "アイテム発見巻物",
         "probability": 0.01257157,
         "isSelectable": false
     },
@@ -767,4 +767,5 @@ const stones: StoneData[] = _stones.map((stone) => ({
 }));
 
 export type Item = typeof items[number];
+export type ItemName = typeof items[number]['name'];
 export const items = [...weapons, ...armors, ...bracelets, ...firearms, ...foods, ...grasses, ...medicines, ...scrolls, ...staffs, ...stones] as const satisfies readonly ItemData[];
