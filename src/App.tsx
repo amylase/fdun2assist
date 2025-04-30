@@ -3,6 +3,7 @@ import { IdentificationStatusProvider } from './contexts/IdentificationStatus'
 import ScrollIdentifier from './components/ScrollIdentifier'
 import StaffCounter from './components/StaffCounter'
 import { Container } from 'react-bootstrap'
+import LevelExp from './components/LevelExp'
 
 function App() {
   return (
@@ -13,6 +14,8 @@ function App() {
         <StaffCounter />
         <hr />
         <ScrollIdentifier />
+        <hr />
+        <LevelExp />
       </IdentificationStatusProvider>
     </Container>
   )
